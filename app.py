@@ -94,7 +94,7 @@ PRESETS = {
 
 
 # ----------------------------------------------------------------------------
-# โหลดโมเดล / ค่าความแม่นยำ
+# โหลดโมเดล / ค่าประสิทธิภาพของโมเดล
 # ----------------------------------------------------------------------------
 def find_model_path() -> Path:
     """หาไฟล์โมเดล: .joblib ชื่อที่กำหนด -> .joblib ไฟล์อื่น -> แตกจากไฟล์ .zip"""
@@ -409,26 +409,26 @@ def render_form():
             section(1, "การเข้าชมหน้าเว็บ", "ผู้ใช้เปิดดูกี่หน้า และใช้เวลานานแค่ไหน")
             c1, c2, c3 = st.columns(3)
             with c1:
-                admin = st.number_input("หน้าบัญชีผู้ใช้ (หน้า)", 0, 100, step=1, key="admin",
+                admin = st.number_input("หน้าบัญชีผู้ใช้ (หน้า)", 0, 27, step=1, key="admin",
                                         help="เช่น หน้าสมัครสมาชิก โปรไฟล์ ตั้งค่าบัญชี")
-                admin_min = st.number_input("เวลาที่ใช้ (นาที)", 0.0, 2000.0, step=1.0, key="admin_min")
+                admin_min = st.number_input("เวลาที่ใช้ (นาที)", 0.0, 56.0, step=1.0, key="admin_min")
             with c2:
-                info = st.number_input("หน้าข้อมูล/ช่วยเหลือ (หน้า)", 0, 100, step=1, key="info",
+                info = st.number_input("หน้าข้อมูล/ช่วยเหลือ (หน้า)", 0, 24, step=1, key="info",
                                        help="เช่น หน้าติดต่อเรา เกี่ยวกับเรา วิธีสั่งซื้อ")
-                info_min = st.number_input("เวลาที่ใช้ (นาที) ", 0.0, 2000.0, step=1.0, key="info_min")
+                info_min = st.number_input("เวลาที่ใช้ (นาที) ", 0.0, 42.0, step=1.0, key="info_min")
             with c3:
-                prod = st.number_input("หน้าสินค้า (หน้า)", 0, 1000, step=1, key="prod",
+                prod = st.number_input("หน้าสินค้า (หน้า)", 0, 705, step=1, key="prod",
                                        help="จำนวนหน้าสินค้าที่ผู้ใช้เปิดดู")
-                prod_min = st.number_input("เวลาที่ใช้ (นาที)  ", 0.0, 2000.0, step=1.0, key="prod_min")
+                prod_min = st.number_input("เวลาที่ใช้ (นาที)  ", 0.0, 1066.0, step=1.0, key="prod_min")
 
         with st.container(border=True):
             section(2, "คุณภาพการเข้าชม", "ตัวเลขจากระบบวิเคราะห์เว็บไซต์ เช่น Google Analytics — ถ้าไม่ทราบให้ใช้ค่าเริ่มต้น")
             c1, c2, c3, c4 = st.columns(4)
-            bounce = c1.number_input("อัตราตีกลับ (%)", 0.0, 100.0, step=0.5, format="%.1f", key="bounce_pct",
+            bounce = c1.number_input("อัตราตีกลับ (%)", 0.0, 20.0, step=0.5, format="%.1f", key="bounce_pct",
                                      help="Bounce Rate: สัดส่วนผู้ที่เข้ามาแล้วออกทันทีโดยไม่ทำอะไรต่อ (ส่วนใหญ่ไม่เกิน 20%)")
-            exit_ = c2.number_input("ออกจากหน้า (%)", 0.0, 100.0, step=0.5, format="%.1f", key="exit_pct",
+            exit_ = c2.number_input("ออกจากหน้า (%)", 0.0, 20.0, step=0.5, format="%.1f", key="exit_pct",
                                     help="สัดส่วนที่หน้าเว็บนั้นเป็นหน้าสุดท้ายก่อนผู้ใช้ออกจากเว็บ (ส่วนใหญ่ไม่เกิน 20%)")
-            page_val = c3.number_input("มูลค่าหน้าเว็บ", 0.0, 500.0, step=1.0, key="page_value",
+            page_val = c3.number_input("มูลค่าหน้าเว็บ", 0.0, 361.0, step=1.0, key="page_value",
                                        help="Page Value: ค่าเฉลี่ยมูลค่าที่หน้าซึ่งผู้ใช้เปิดดูเคยสร้างก่อนเกิดการซื้อ "
                                             "ยิ่งสูงยิ่งใกล้ซื้อ (ไม่ทราบให้ใส่ 0) เป็นตัวแปรที่มีผลต่อการทำนายมากที่สุด")
             special = c4.select_slider(
@@ -488,20 +488,20 @@ def render_result(model, values: dict):
 
 def render_metrics():
     st.markdown("---")
-    section(4, "ความแม่นยำของระบบ", "ผลการประเมินโมเดลกับข้อมูลทดสอบที่โมเดลไม่เคยเห็นมาก่อน")
+    section(4, "ประสิทธิภาพของโมเดล", "ผลการประเมินโมเดลกับข้อมูลทดสอบที่โมเดลไม่เคยเห็นมาก่อน")
 
     metrics = fill_metrics_from_confusion(load_metrics())
     items = [
-        ("Accuracy", "ความแม่นยำ (Accuracy)", metrics.get("accuracy"), True),
-        ("Precision", "Precision", metrics.get("precision"), False),
-        ("Recall", "Recall", metrics.get("recall"), False),
+        ("Accuracy", "ความถูกต้อง (Accuracy)", metrics.get("accuracy"), True),
+        ("Precision", "ความแม่นยำ (Precision)", metrics.get("precision"), False),
+        ("Recall", "ความครอบคลุม (Recall)", metrics.get("recall"), False),
         ("F1-score", "F1-score", metrics.get("f1_score"), False),
         ("ROC-AUC", "ROC-AUC", metrics.get("roc_auc"), False),
     ]
     items = [(n, th, as_percent(v), p) for n, th, v, p in items if v is not None]
 
     if not items:
-        st.info("ยังไม่ได้ระบุค่าความแม่นยำ — กรอกค่าจากการประเมินโมเดลลงในไฟล์ metrics.json")
+        st.info("ยังไม่ได้ระบุค่าประสิทธิภาพของโมเดล — กรอกค่าจากการประเมินโมเดลลงในไฟล์ metrics.json")
         return
 
     cols = st.columns(len(items))
